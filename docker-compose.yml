@@ -1,0 +1,25 @@
+services:
+  cybershield-india:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: cybershield-indian-fraud-system
+    ports:
+      - "5000:5000"  # Flask API
+      - "8501:8501"  # Streamlit Dashboard
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./models:/app/models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - FLASK_ENV=production
+      - MARKET=India
+      - CURRENCY=INR
+    restart: unless-stopped
+    networks:
+      - cybershield-network
+
+networks:
+  cybershield-network:
+    driver: bridge

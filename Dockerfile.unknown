@@ -1,0 +1,82 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python packages only (no system packages needed)
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all application files
+COPY . .
+
+# Create directories
+RUN mkdir -p logs data models temp
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV FLASK_ENV=production
+
+# Create a simple startup script that doesn't require curl or procps
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "🇮🇳 Starting CyberShield Indian Fraud Detection System..."\n\
+echo "भारतीय धोखाधड़ी का पता लगाने वाली प्रणाली शुरू हो रही है..."\n\
+\n\
+# Create models if they don't exist\n\
+if [ ! -f "fraud_model.pkl" ]; then\n\
+    echo "Creating fraud detection models..."\n\
+    python train_models.py &\n\
+    sleep 10\n\
+fi\n\
+\n\
+# Start Flask API\n\
+echo "Starting Flask API on port 5000..."\n\
+python app.py &\n\
+API_PID=$!\n\
+\n\
+# Give API time to start\n\
+sleep 10\n\
+echo "✅ API server started"\n\
+\n\
+# Start Streamlit Dashboard\n\
+echo "Starting Streamlit Dashboard on port 8501..."\n\
+streamlit run dashboard.py \\\n\
+    --server.port 8501 \\\n\
+    --server.address 0.0.0.0 \\\n\
+    --server.headless true \\\n\
+    --server.fileWatcherType none &\n\
+DASHBOARD_PID=$!\n\
+\n\
+sleep 5\n\
+echo "✅ Dashboard started"\n\
+\n\
+echo ""\n\
+echo "🎉 CyberShield Indian Fraud Detection System is running!"\n\
+echo "📊 Dashboard: http://localhost:8501"\n\
+echo "🔗 API: http://localhost:5000"\n\
+echo ""\n\
+\n\
+# Simple monitoring without external tools\n\
+cleanup() {\n\
+    echo "Stopping services..."\n\
+    kill $API_PID $DASHBOARD_PID 2>/dev/null || true\n\
+    exit 0\n\
+}\n\
+\n\
+trap cleanup SIGTERM SIGINT\n\
+\n\
+# Keep container running\n\
+while true; do\n\
+    sleep 30\n\
+done\n\
+' > start.sh && chmod +x start.sh
+
+EXPOSE 5000 8501
+
+# Simple health check that doesn't require curl
+HEALTHCHECK --interval=60s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:5000', timeout=5)" || exit 1
+
+CMD ["./start.sh"]
