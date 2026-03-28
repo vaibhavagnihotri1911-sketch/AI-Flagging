@@ -9,6 +9,48 @@ AI Flagging System is an intelligent application designed to detect and flag sus
 - Real-time prediction system
 - Dashboard for monitoring results
 
+## 🔥 Architecture
+                    ┌────────────────────┐
+                    │   QR Scanner Input │
+                    └─────────┬──────────┘
+                              ↓
+                    ┌────────────────────┐
+                    │  QR Parser Layer   │
+                    │ (UPI / Account ID) │
+                    └─────────┬──────────┘
+                              ↓
+          ┌────────────────────────────────────┐
+          │        Feature Engineering        │
+          │----------------------------------│
+          │ - amount                         │
+          │ - time of transaction           │
+          │ - merchant / payee              │
+          │ - user behavior profile         │
+          └─────────┬────────────────────────┘
+                              ↓
+        ┌──────────────────────────────────────┐
+        │        HYBRID RISK ENGINE            │
+        │--------------------------------------│
+        │ 1. Rule Engine (hard checks)        │
+        │ 2. ML Model (Isolation Forest)      │
+        │ 3. Behavioral Anomaly Scoring       │
+        └─────────┬────────────────────────────┘
+                              ↓
+        ┌──────────────────────────────────────┐
+        │     EXPLAINABILITY ENGINE (XAI)     │
+        │--------------------------------------│
+        │ Converts scores → human reasons      │
+        └─────────┬────────────────────────────┘
+                              ↓
+        ┌──────────────────────────────────────┐
+        │      STREAMLIT DASHBOARD UI         │
+        │--------------------------------------│
+        │ - Risk score                        │
+        │ - Reason breakdown                  │
+        │ - Trends + history                 │
+        └──────────────────────────────────────┘
+
+
 ## 🛠️ Tech Stack
 - Python
 - Machine Learning (Scikit-learn)
