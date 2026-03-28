@@ -59,23 +59,7 @@ Behavior deviates from normal spending pattern
 - Flask (Backend API) ⚙️
 - Streamlit (Dashboard UI) 📈
 
-🚀 Live Demo
 
-👉 (Add your deployed link here after deployment)
-Example: https://ai-flagging-app.streamlit.app
-
-## 🖼️ Screenshots
-📊 Dashboard View
-
-(Add image: dashboard.png)
-
-⚠️ Risk Analysis Output
-
-(Add image: risk_output.png)
-
-🧠 AI Explanation Panel
-
-(Add image: explanation.png)
 
 ## 🚀 How to Run
 git clone https://github.com/vaibhavagnihotri1911-sketch/AI-Flagging.git
