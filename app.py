@@ -404,4 +404,4 @@ def predict_v3():
 
 if __name__ == '__main__':
     logger.info("🚀 Starting AI Flagging System")
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=10000)
